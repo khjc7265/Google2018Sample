@@ -2,6 +2,9 @@ package com.example.hyeonjung.google2018sample;
 
 import android.util.Log;
 
+import com.example.hyeonjung.google2018sample.kotlin.Constants;
+import com.example.hyeonjung.google2018sample.kotlin.DefineFunctionAndCall;
+
 import java.util.ArrayList;
 
 public class Test {

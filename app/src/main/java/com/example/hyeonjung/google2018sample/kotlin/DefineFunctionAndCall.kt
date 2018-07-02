@@ -1,6 +1,6 @@
 @file:JvmName("DefineFunctionAndCall")
 
-package com.example.hyeonjung.google2018sample
+package com.example.hyeonjung.google2018sample.kotlin
 
 import android.util.Log
 import android.view.View

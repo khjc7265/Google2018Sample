@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import com.example.hyeonjung.google2018sample.kotlin.*
 import java.io.File
 
 //import com.example.hyeonjung.google2018sample.strings.lastChar as last

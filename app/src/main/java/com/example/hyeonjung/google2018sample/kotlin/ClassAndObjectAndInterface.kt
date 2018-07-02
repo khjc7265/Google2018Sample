@@ -1,4 +1,4 @@
-package com.example.hyeonjung.google2018sample
+package com.example.hyeonjung.google2018sample.kotlin
 
 import android.util.Log
 import java.io.Serializable
@@ -187,20 +187,20 @@ class Usere5(val nickname: String, val isSubscribed:Boolean = true)
 // isSubscribed 파라미터에는 디폴트 값이 쓰인다.
 val hyun = Usere5("현석")
 // 모든 인자를 파라미터 선언 순서대로 지정할 수도 있다.
-val gye = Usere5("계영",false)
+val gye = Usere5("계영", false)
 // 생성 인자 중 일부에 대해 이름을 지정할 수도 있다.
-val hey = Usere5("헤원",isSubscribed = false)
+val hey = Usere5("헤원", isSubscribed = false)
 
 // 클래스에 기반 클래스가 있다면 주 생성자에서 기반 클래스의 생성자를 호출해야 할 필요가 있다.
 // 기반 클래스를 초기화하려면 기반 클래스 이름 뒤에 괄호를 치고 생성자 인자를 넘긴다.
 open class User6(val nickname: String)
-class TwitterUser(nickname: String) :User6(nickname)
+class TwitterUser(nickname: String) : User6(nickname)
 
 // 인자가 없는 디폴트 생성자가 만들어진다.
 open class Button2
 
 // Button 의 생성자는 아무 인자도 받지 않지만, Button 클래스를 상속한 하위 클래스는 반드시 Button 클래스의 생성자를 호출해야 한다.
-class RadioButton:Button2()
+class RadioButton: Button2()
 
 // 이 규칙으로 인해 기반 클래스의 이름 뒤에는 꼭 빈 괄호가 들어간다( 물론 생성자 인자가 있다면 괄호 안에 인자가 들어간다).
 // 반면 인터페이스는 생성자가 없기 때문에 어떤 클래스가 인터페이스를 구현하는 경우 그 클래스의 상위 클래스 목록에 있는 인터페이스 이름 뒤에는 아무 괄호도 없다.
