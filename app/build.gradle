@@ -1,0 +1,77 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android {
+    compileSdkVersion ver_android_compile
+    defaultConfig {
+        applicationId "${base_application_name}"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"    }
+
+    signingConfigs {
+        config {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            shrinkResources true
+        }
+    }
+
+    flavorDimensions "mode"
+    productFlavors {
+        dev{
+            dimension "mode"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            buildConfigField('boolean','IS_DEV','true')
+            manifestPlaceholders = [appLabel: "Dev Google2018 Sample"]
+            versionCode 1
+            versionName "1.0.0"
+        }
+        prod{
+            dimension "mode"
+            versionNameSuffix "-prod"
+            buildConfigField('boolean','IS_DEV','false')
+            manifestPlaceholders = [appLabel: "Prod Google2018 Sample"]
+            versionCode 1
+            versionName "1.0.0"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation kotlin_stdlib
+    implementation support_appcompat
+    implementation support_constrainlayout
+    implementation arch_lifecycle
+    testImplementation junit
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'android.arch.navigation:navigation-fragment:1.0.0-alpha01'
+}
