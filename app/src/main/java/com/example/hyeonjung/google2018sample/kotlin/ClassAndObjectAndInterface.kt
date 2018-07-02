@@ -182,7 +182,7 @@ class User4 constructor(val _nickname: String) {
 }
 
 // 생성자 파라미터에 대한 디폴트 값을 제공한다.
-class Usere5(val nickname: String, val isSubscribed:Boolean = true)
+class Usere5(val nickname: String, val isSubscribed: Boolean = true)
 
 // isSubscribed 파라미터에는 디폴트 값이 쓰인다.
 val hyun = Usere5("현석")
@@ -194,13 +194,14 @@ val hey = Usere5("헤원", isSubscribed = false)
 // 클래스에 기반 클래스가 있다면 주 생성자에서 기반 클래스의 생성자를 호출해야 할 필요가 있다.
 // 기반 클래스를 초기화하려면 기반 클래스 이름 뒤에 괄호를 치고 생성자 인자를 넘긴다.
 open class User6(val nickname: String)
+
 class TwitterUser(nickname: String) : User6(nickname)
 
 // 인자가 없는 디폴트 생성자가 만들어진다.
 open class Button2
 
 // Button 의 생성자는 아무 인자도 받지 않지만, Button 클래스를 상속한 하위 클래스는 반드시 Button 클래스의 생성자를 호출해야 한다.
-class RadioButton: Button2()
+class RadioButton : Button2()
 
 // 이 규칙으로 인해 기반 클래스의 이름 뒤에는 꼭 빈 괄호가 들어간다( 물론 생성자 인자가 있다면 괄호 안에 인자가 들어간다).
 // 반면 인터페이스는 생성자가 없기 때문에 어떤 클래스가 인터페이스를 구현하는 경우 그 클래스의 상위 클래스 목록에 있는 인터페이스 이름 뒤에는 아무 괄호도 없다.
@@ -208,6 +209,20 @@ class RadioButton: Button2()
 
 // 어떤 클래스를 클래스 외부에서 인스턴화하지 못하게 막고 싶다면 모든 생성자를 private 으로 만들면 된다.
 // 다음과 같이 주 생성자에 private 변경자를 붙일 수 있다.
-class Secreteive private constructor()
+// 이 클래스의 (유일한) 주 생성자는 비공개다.
+// Secretive 클래스 안에는 주 생성자밖에 없고 그 주 생성자는 비공개이므로 외부에서는 Secretive 를 인스턴스화할 수 없다.
+class Secretive private constructor()
+
+// 클래스는 주 생성자를 생성하지 않고 부 생성자만 선언 할 수 있다.
+// 이 경우 클래스 헤더에 있는 클래스 이름 뒤에 괄호가 업고 부 생성자는 constructor 키워드로 시작한다.
+// 클래스에 주 생성자가 없다면 모든 부 생성자는 반드시 상위 클래스를 초기화하거나 다른 생성자에게 생성을 위임해야 한다.
+// 부 생성자가 필요한 주된 이유는 자바 상호운영성이다. 하지만 부 생성자가 필요한 다른 경우도 있다.
+// 클래스 인스턴스를 생성할 때 파라미터 목록이 다른 생성 방법이 여럿 존재하는 경우에는 부 생성자를 여럿 둘 수밖에 없다.
+//abstract class MyButton : View {
+//    constructor(ctx: Context) : this(ctx, MY_STYLE)
+//
+//    constructor(ctx: Context, attr: AttributeSet) : super(ctx, attr)
+//}
+
 
 
