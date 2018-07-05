@@ -1,6 +1,7 @@
 package com.example.hyeonjung.google2018sample.kotlin
 
 import android.util.Log
+import java.io.File
 import java.io.Serializable
 
 interface Clickable {
@@ -223,6 +224,174 @@ class Secretive private constructor()
 //
 //    constructor(ctx: Context, attr: AttributeSet) : super(ctx, attr)
 //}
+
+// UserInterface 를 구현하는 클래스가 nickname 의 값을 얻을 수 있는 방법을 제공해야 한다는 뜻.
+interface UserInterface {
+    val nickname: String
+}
+
+// 주 생성자에 있는 프로퍼티
+class PrivateUser(override val nickname: String) : UserInterface
+
+class SubscribingUser(private val email: String) : UserInterface {
+
+    // 커스텀 게터. 커스텀 접근자에서 매번 값을 계산
+    override val nickname: String
+        get() = email.substringBefore("@")
+}
+
+//프로퍼티 초기화 식
+class FacebookUser(accountId: Int) : UserInterface {
+    override val nickname = getFacebookName(accountId)
+
+    private fun getFacebookName(accountId: Int): String {
+        return "facebookName$accountId"
+    }
+}
+
+interface UserInterface2 {
+    val email: String
+    val nickname: String
+        get() = email.substringBefore('@')
+}
+
+class User(val id: Int, val name: String) {
+    constructor(name: String) : this(0, name)
+
+    var address: String = "unspecified"
+        // 뒷받침하는 필드 값 읽기
+        // field 라는 특별한 식별자를 통해 뒷받침하는 필드에 접근할 수 있다.
+        set(value) {
+            Log.d(TAG, """
+                Address was changed for $name : "$field" -> "$value".
+                """.trimIndent())
+            field = value
+        }
+
+}
+
+
+/// 로컬 함수에서 바깥 함수의 파라미터 접근하기. 로컬 함수는 자신이 속한 바깥 함수의 모든 파라미터와 변수를 사용할 수 있다.
+fun saveUser(user: User) {
+    fun validate(value: String, fieldName: String) {
+        if (value.isEmpty()) {
+            throw IllegalArgumentException(
+                    //user 접근 가능
+                    "Can't save user ${user.id}: empty $fieldName"
+            )
+        }
+    }
+
+    try {
+        // 로컬 함수를 호출해서 각 필드를 검증
+        validate(user.name, "Name")
+        validate(user.address, "Address")
+    } catch (e: Exception) {
+        Log.d(TAG, e.message)
+    }
+}
+
+// 검증 로직을 확장 함수로 추출하기
+fun User.validateBeforeSave() {
+    fun validate(value: String, fieldName: String) {
+        if (value.isEmpty()) {
+            throw IllegalArgumentException(
+                    "Can't save user $id: empty $fieldName"
+            )
+        }
+    }
+    validate(name, "Name")
+    validate(address, "Address")
+}
+
+fun saveUser2(user: User) {
+    try {
+        user.validateBeforeSave()
+    } catch (e: Exception) {
+        Log.d(TAG, e.message)
+    }
+}
+
+class LengthCounter {
+    // 세터의 가시성을 private 으로 지정.
+    var counter: Int = 0
+        private set
+
+    fun addWord(word: String) {
+        counter += word.length
+    }
+}
+
+class Client(val name: String, private val postalCode: Int) {
+    // "Any" 는 java.lang.Object 에 대응하는 클래스로, 코틀린의 모든 클래스의 최상위 클래스다.
+    // "Any?" 는 널이 될수 있는 타입이므로 other 는 null 일 수 있다.
+    override fun equals(other: Any?): Boolean {
+        // other 가 Client 인지 검사한다.
+        // 코틀린의 is 검사는 자바의 instanceof 와 같다. is는 어떤 값의 타입을 검사한다.
+        if (other == null || other !is Client)
+            return false
+        // 두 객체의 프로퍼티 값이 서로 같은지 검사한다.
+        return name == other.name && postalCode == other.postalCode
+    }
+
+    override fun toString() = "Client(name = $name, postalCode = $postalCode)"
+
+    // hashCode 를 오버라하지 않는 경우 Client 가 제대로 작동하지 않는다.
+    // equals 를 오버라이드 할 때는 반드시 hashcode 도 함께 오버라이드 해야 한다.
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + postalCode
+        return result
+    }
+}
+
+// data 클래스는 equals/toString/hashCode 함수를 컴파일러가 자동으로 만들어준다.
+// data 클래스의 프로퍼티가 꼭 val 일 필요는 없다. 원한다면 var 프로퍼티를 써도 된다.
+// 하지만 데이터 클래스의 모든 프로퍼티를 읽기 전용으로 만들어서 데이터 클래스를 불변 클래스로 만들라고 권장한다.
+data class Client2(val name: String, private val postalCode: Int)
+
+// by 키워드를 통해 인터페이스에 대한 구현을 다른 객체에 위임 중이라는 사실을 명시
+class Delegatingcollection<T>(
+        innerList: Collection<T> = ArrayList()
+) : Collection<T> by innerList
+
+// mutableCollection 과 Collection 차이 : http://aroundck.tistory.com/4861
+// primitive type / wrapper type : http://jusungpark.tistory.com/17
+class CountingSet<T>(
+        private val innerSet: MutableCollection<T> = HashSet()
+) : MutableCollection<T> by innerSet {
+    var objectAdded = 0
+
+    override fun add(element: T): Boolean {
+        objectAdded++
+        return innerSet.add(element)
+    }
+
+    override fun addAll(elements: Collection<T>): Boolean {
+        objectAdded += elements.size
+        return innerSet.addAll(elements)
+    }
+}
+
+// object 키워드를 통해 싱글톤 생성.
+object Payroll {
+    val allEmployees = arrayListOf<Person>()
+    fun calculateSalary() {
+        for (person in allEmployees) {
+
+        }
+    }
+}
+
+object CaseInsensitiveFileComparator : Comparator<File> {
+    override fun compare(file1: File, file2: File): Int {
+        return file1.path.compareTo(file2.path, ignoreCase = true)
+    }
+}
+
+data class Person(val name: String) {
+
+}
 
 
 

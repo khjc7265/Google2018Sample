@@ -8,7 +8,7 @@ ext {
     ver_android_class_path = "3.2.0-alpha15"
     ver_android_support = "27.1.1"
     ver_android_buildTool = "27.0.3"
-    ver_kotlin = "1.2.41"
+    ver_kotlin = "1.2.50"
     ver_lifecycle = "1.1.1"
 
     kotlin_classpath = "org.jetbrains.kotlin:kotlin-gradle-plugin:$ver_kotlin"
